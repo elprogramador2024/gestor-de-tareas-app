@@ -7,7 +7,7 @@ import Usuario from './pages/Usuario';
 
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route  } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 function App() {
   return (
@@ -25,11 +25,12 @@ function App() {
         />
         <Header />
         <Routes>             
-          <Route path="/" element={<Login />} /> 
+          <Route path="/" element={<Login />} />          
           <Route path="/main" element={<Main />} />
           <Route path="/usuario" element={<Usuario />} />
           <Route path="/tareas/:name?" element={<Tareas />} />  
           <Route path="/tarea" element={<Tarea />} /> 
+          <Route path="*" element={<Navigate to="/" />} /> 
         </Routes> 
  
       </div>

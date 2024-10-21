@@ -20,6 +20,10 @@ const Login = () => {
         return () => clearTimeout(timer);
     }, [isErrorVisible]);
 
+    useEffect(() => {
+        saveToken(null);
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
