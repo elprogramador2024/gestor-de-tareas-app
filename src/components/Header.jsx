@@ -29,7 +29,7 @@ function Header() {
         setAnchorElUser(null);
     };
 
-    const { token, setToken } = useToken();
+    const { token, saveToken } = useToken();
     const navigate = useNavigate();
 
     return (
@@ -59,7 +59,7 @@ function Header() {
                     </Typography>
 
 
-                    {token && (
+                    {token?.token && (
                         <>
                             <Box sx={{ flexGrow: 1, display: 'flex' }}>
                                 {token.roles[0] == "Administrador" && (
@@ -116,7 +116,7 @@ function Header() {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    <MenuItem onClick={() => { setToken(null); navigate('/'); }}>
+                                    <MenuItem onClick={() => { saveToken(null); navigate('/'); }}>
                                         <Typography sx={{ textAlign: 'center' }}>Cerrar Sesion</Typography>
                                     </MenuItem>
                                 </Menu>

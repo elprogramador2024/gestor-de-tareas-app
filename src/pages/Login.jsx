@@ -10,7 +10,7 @@ const Login = () => {
     const [isErrorVisible, setIsErrorVisible] = useState(false);
     const [usuario, setUSuario] = useState({ name: "", password: "" });
     const navigate = useNavigate();
-    const { token, setToken } = useToken();
+    const { token, saveToken } = useToken();
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -38,7 +38,7 @@ const Login = () => {
             }
 
             const data = await response.json();
-            setToken(data);
+            saveToken(data);
 
             if (data.roles[0] == "Administrador")
                 navigate('/main');

@@ -9,7 +9,7 @@ const Usuario = () => {
     const [errors, setErrors] = useState([]);
     const [usuario, setUsuario] = useState({ "nombre": "", "email": "", "password": "", "rol": { "name": "Empleado" } });
     const navigate = useNavigate();
-    const { token, setToken } = useToken();
+    const { token, saveToken } = useToken();
 
     const location = useLocation();
     const state = location.state;

@@ -35,13 +35,16 @@ const Tareas = () => {
                 }
             });
 
+            if (!response.ok) {
+                navigate('/');
+            }
+
             const data = await response.json();
-            //console.log(data)
             setTareas(data);
             setShowTareas(data.tareas)
 
         } catch (error) {
-            console.error('Error:', error);
+            navigate('/');
         }
     }
 

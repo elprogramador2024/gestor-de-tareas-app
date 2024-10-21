@@ -27,11 +27,15 @@ const Main = () => {
                 }
             });
 
+            if (!response.ok) {
+                navigate('/');
+            }
+
             const data = await response.json();
             setUsuarios(data);
 
         } catch (error) {
-            console.error('Error:', error);
+            navigate('/');
         }
     }
 

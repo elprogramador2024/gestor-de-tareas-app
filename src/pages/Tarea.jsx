@@ -10,7 +10,7 @@ const Tarea = () => {
     const [tarea, setTarea] = useState({ "id": 0, "titulo": "", "descripcion": "", "fechaIni": "", "fechaFin": "", "userName": "user3", "estado": 0 });
     const [usuarios, setUsuarios] = useState([]);
     const navigate = useNavigate();
-    const { token, setToken } = useToken();
+    const { token, saveToken } = useToken();
 
     const location = useLocation();
     const obj = location.state;
