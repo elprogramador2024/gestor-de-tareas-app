@@ -1,5 +1,6 @@
 import { WidthFull } from '@mui/icons-material'
 import { Alert, Box, Button, Card, CardActions, CardContent, Grid2, Paper, Stack, TextField } from '@mui/material'
+import AccountCircleRounded from '@mui/icons-material/AccountCircleRounded';
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
@@ -62,12 +63,15 @@ const Login = () => {
             height: '100vh',
         }}>
             <Card sx={{ maxWidth: 345 }}>
+
+                <AccountCircleRounded sx={{ fontSize: 80, paddingTop: '15px', color: 'lightgray' }} />
                 <CardContent>
                     <TextField
                         id="filled-search"
                         label="Usuario"
                         type="search"
                         sx={{ paddingBottom: '10px' }}
+                        autoFocus
                         value={usuario.name}
                         onChange={(e) => { setUSuario((u) => ({ ...u, name: e.target.value })) }}
                     />

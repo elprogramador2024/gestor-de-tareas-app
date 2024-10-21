@@ -1,11 +1,15 @@
-import { Button, Grid2, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Box, Button, FormControl, Grid2, Input, InputAdornment, InputBase, InputLabel, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search';
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useToken } from '../context/TokenProvider'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const Tareas = () => {
-    const [tareas, setTareas] = useState([]);
+    const [tareas, setTareas] = useState({});
+    const [showTareas, setShowTareas] = useState([]);
+    const [busqueda, setBusqueda] = useState('');
+    const [page, setPage] = useState(1);
     const navigate = useNavigate();
     const { token } = useToken();
     const { name } = useParams();
@@ -14,16 +18,16 @@ const Tareas = () => {
         if (token == null)
             navigate('/');
 
-        getTareas();
+        getTareas(1, 5);
     }, []);
 
-    const getTareas = async () => {
+    const getTareas = async (pgnum, pgsize) => {
         try {
-            let addpath = '';
+            let addpath = '?';
             if (name)
-                addpath = `byuser?username=${name}`;
+                addpath = `/byuser?username=${name}&`;
 
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/tarea/${addpath}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/tarea${addpath}pgnum=${pgnum}&pgsize=${pgsize}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +36,9 @@ const Tareas = () => {
             });
 
             const data = await response.json();
+            //console.log(data)
             setTareas(data);
+            setShowTareas(data.tareas)
 
         } catch (error) {
             console.error('Error:', error);
@@ -54,8 +60,9 @@ const Tareas = () => {
                 throw new Error('Login failed');
             }
 
-            const data = await response.json();
-            setTareas(tareas.filter(item => item.id !== id));
+            if (response.ok) {
+                getTareas(page, 5)
+            }
 
         } catch (error) {
 
@@ -66,10 +73,30 @@ const Tareas = () => {
     return (
         <div style={{ padding: '30px' }}>
             <Grid2 display="flex" justifyContent="flex-end" sx={{ paddingBottom: '12px' }}>
+
+                <div style={{ paddingRight: '20px' }}>
+                    <FormControl >
+                        <InputLabel>Buscar</InputLabel>
+                        <Input
+                            type='text'
+                            value={busqueda}
+                            onChange={(e) => {
+                                setBusqueda(e.target.value);
+                                setShowTareas(tareas.tareas.filter(item => item.titulo.toUpperCase().trim().includes(e.target.value.toUpperCase().trim())));
+                            }}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            }
+                        />
+                    </FormControl>
+                </div>
+
                 <Button variant="contained" color="success" disabled={token.roles[0] == "Empleado"} onClick={() => {
                     navigate('/tarea', { state: { "id": 0, "titulo": "", "descripcion": "", "fechaIni": new Date().toISOString(), "fechaFin": new Date().toISOString(), "userName": name, "estado": 0 } })
                 }}>Insertar</Button>
-            </Grid2>
+            </Grid2 >
 
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -83,7 +110,7 @@ const Tareas = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {tareas.map((row) => (
+                        {showTareas?.map((row) => (
                             <TableRow
                                 key={row.name}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -105,6 +132,15 @@ const Tareas = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                paddingTop: '15px'
+            }}>
+                <Pagination count={tareas.totpages} page={page} onChange={(e, value) => { setPage(value); getTareas(value, 5) }} />
+            </Box>
         </div >
     )
 }
